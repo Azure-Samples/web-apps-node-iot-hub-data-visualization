@@ -33,7 +33,7 @@ $(document).ready(function () {
   var basicOption = {
     title: {
       display: true,
-      text: 'Temperature & Humidity real-time data',
+      text: 'Temperature & Humidity Real-time Data',
       fontSize: 36
     },
     scales: {
