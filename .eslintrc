@@ -1,0 +1,37 @@
+{
+  "extends": "eslint:recommended",
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "rules": {
+    "eol-last": [
+      "error",
+      "always"
+    ],
+    "max-len": [
+      "error",
+      150
+    ],
+    "linebreak-style": 0,
+    "no-console": 0,
+    "indent": [
+      "error",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "no-trailing-spaces": "error",
+    "camelcase": [
+      "error",
+      {
+        "properties": "always"
+      }
+    ]
+  }
+}
