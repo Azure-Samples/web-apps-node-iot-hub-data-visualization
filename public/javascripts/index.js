@@ -74,20 +74,26 @@ $(document).ready(function () {
     console.log('receive message' + message.data);
     try {
       var obj = JSON.parse(message.data);
-      if(!obj.time || !obj.temperature || !obj.humidity) {
+      if(!obj.time || !obj.temperature) {
         return;
       }
       timeData.push(obj.time);
       temperatureData.push(obj.temperature);
-      humidityData.push(obj.humidity);
-
       // only keep no more than 50 points in the line chart
+      const maxLen = 50;
       var len = timeData.length;
-      if (len > 50) {
+      if (len > maxLen) {
         timeData.shift();
         temperatureData.shift();
+      }
+
+      if (obj.humidity) {
+        humidityData.push(obj.humidity);
+      }
+      if (humidityData.length > maxLen) {
         humidityData.shift();
       }
+
       myLineChart.update();
     } catch (err) {
       console.error(err);
