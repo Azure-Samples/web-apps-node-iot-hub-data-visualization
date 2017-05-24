@@ -80,8 +80,9 @@ $(document).ready(function () {
       timeData.push(obj.time);
       temperatureData.push(obj.temperature);
       // only keep no more than 50 points in the line chart
+      const maxLen = 50;
       var len = timeData.length;
-      if (len > 50) {
+      if (len > maxLen) {
         timeData.shift();
         temperatureData.shift();
       }
@@ -89,7 +90,7 @@ $(document).ready(function () {
       if (obj.humidity) {
         humidityData.push(obj.humidity);
       }
-      if (humidityData.length > 50) {
+      if (humidityData.length > maxLen) {
         humidityData.shift();
       }
 
