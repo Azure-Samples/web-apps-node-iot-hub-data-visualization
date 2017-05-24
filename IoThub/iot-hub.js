@@ -16,17 +16,23 @@ IoTHubReaderClient.prototype.startReadMessage = function(cb) {
     console.error(err.message || err);
   };
 
+  var deviceId = process.env['Azure.IoT.IoTHub.DeviceId'];
+
   this.iotHubClient.open()
     .then(this.iotHubClient.getPartitionIds.bind(this.iotHubClient))
     .then(function(partitionIds) {
       return partitionIds.map(function(partitionId) {
         return this.iotHubClient.createReceiver(this.consumerGroupName, partitionId, {
-          'startAfterTime': Date.now() - 10000
+          'startAfterTime': Date.now()
         })
         .then(function(receiver) {
           receiver.on('errorReceived', printError);
           receiver.on('message', (message) => {
-            cb(message.body, Date.parse(message.systemProperties['x-opt-enqueued-time']));
+            var from = message.annotations['iothub-connection-device-id'];
+            if (deviceId && deviceId !== from) {
+              return;
+            }
+            cb(message.body, Date.parse(message.enqueuedTimeUtc));
           });
         }.bind(this));
       }.bind(this));
