@@ -25,16 +25,16 @@ IoTHubReaderClient.prototype.startReadMessage = function(cb) {
         return this.iotHubClient.createReceiver(this.consumerGroupName, partitionId, {
           'startAfterTime': Date.now()
         })
-        .then(function(receiver) {
-          receiver.on('errorReceived', printError);
-          receiver.on('message', (message) => {
-            var from = message.annotations['iothub-connection-device-id'];
-            if (deviceId && deviceId !== from) {
-              return;
-            }
-            cb(message.body, Date.parse(message.enqueuedTimeUtc));
-          });
-        }.bind(this));
+          .then(function(receiver) {
+            receiver.on('errorReceived', printError);
+            receiver.on('message', (message) => {
+              var from = message.annotations['iothub-connection-device-id'];
+              if (deviceId && deviceId !== from) {
+                return;
+              }
+              cb(message.body, Date.parse(message.enqueuedTimeUtc));
+            });
+          }.bind(this));
       }.bind(this));
     }.bind(this))
     .catch(printError);
