@@ -4,7 +4,7 @@ This repo contains code for a web application, which can read temperature & humi
 ## Browser compatible
 | Browser | Least Version |
 | --- | --- |
-| IE | 10 | 
+| IE | 10 |
 | Edge | 14 |
 | Firefox | 50 |
 | Chrome | 49 |
@@ -35,5 +35,15 @@ Go to [Azure Portal](https://portal.azure.com) to create your own Azure web app 
 * Open a console and set the following environment variable:
   * `set Azure.IoT.IoTHub.ConnectionString=<your connection string>`
   * `set Azure.IoT.IoTHub.ConsumerGroup=<your consumer group name>`
+* Open ./public/javascripts/index.js, and change the code around line 69
+
+    from
+    ```js
+    var ws = new WebSocket('wss://' + location.host);
+    ```
+    to
+    ```js
+    var ws = new WebSocket('ws://' + location.host);
+    ```
 * `npm install`
 * `npm start`

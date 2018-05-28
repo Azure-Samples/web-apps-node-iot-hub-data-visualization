@@ -3,7 +3,7 @@
  */
 'use strict';
 
-var EventHubClient = require('azure-event-hubs').Client;
+var { EventHubClient, EventPosition } = require('azure-event-hubs');
 
 // Close connection to IoT Hub.
 IoTHubReaderClient.prototype.stopReadMessage = function() {
@@ -12,37 +12,36 @@ IoTHubReaderClient.prototype.stopReadMessage = function() {
 
 // Read device-to-cloud messages from IoT Hub.
 IoTHubReaderClient.prototype.startReadMessage = function(cb) {
+  var self = this;
   var printError = function(err) {
     console.error(err.message || err);
   };
-
   var deviceId = process.env['Azure.IoT.IoTHub.DeviceId'];
 
-  this.iotHubClient.open()
-    .then(this.iotHubClient.getPartitionIds.bind(this.iotHubClient))
-    .then(function(partitionIds) {
-      return partitionIds.map(function(partitionId) {
-        return this.iotHubClient.createReceiver(this.consumerGroupName, partitionId, {
-          'startAfterTime': Date.now()
-        })
-          .then(function(receiver) {
-            receiver.on('errorReceived', printError);
-            receiver.on('message', (message) => {
-              var from = message.annotations['iothub-connection-device-id'];
-              if (deviceId && deviceId !== from) {
-                return;
-              }
-              cb(message.body, Date.parse(message.enqueuedTimeUtc));
-            });
-          }.bind(this));
-      }.bind(this));
-    }.bind(this))
-    .catch(printError);
+  EventHubClient.createFromIotHubConnectionString(this.connectionString).then((client) => {
+    console.log("Successully created the EventHub Client from iothub connection string.");
+    self.iotHubClient = client;
+    return self.iotHubClient.getPartitionIds();
+  }).then((ids) => {
+    console.log("The partition ids are: ", ids);
+    var onMessageHandler = (message) => {
+      var from = message.annotations['iothub-connection-device-id'];
+      if (deviceId && deviceId !== from) {
+        return;
+      }
+      cb(message.body, Date.parse(message.enqueuedTimeUtc));
+    };
+    return ids.map(function (id) {
+      return self.iotHubClient.receive(id, onMessageHandler, printError, { eventPosition: EventPosition.fromEnqueuedTime(Date.now()) });
+    });
+  }).catch(printError);
+
 }
 
 function IoTHubReaderClient(connectionString, consumerGroupName) {
-  this.iotHubClient = EventHubClient.fromConnectionString(connectionString);
+  this.connectionString = connectionString;
   this.consumerGroupName = consumerGroupName;
+  this.iotHubClient = undefined;
 }
 
 module.exports = IoTHubReaderClient;
