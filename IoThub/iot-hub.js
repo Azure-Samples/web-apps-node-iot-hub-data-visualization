@@ -17,6 +17,7 @@ IoTHubReaderClient.prototype.startReadMessage = function(cb) {
     console.error(err.message || err);
   };
   var deviceId = process.env['Azure.IoT.IoTHub.DeviceId'];
+
   EventHubClient.createFromIotHubConnectionString(this.connectionString).then((client) => {
     console.log("Successully created the EventHub Client from iothub connection string.");
     self.iotHubClient = client;
@@ -34,6 +35,7 @@ IoTHubReaderClient.prototype.startReadMessage = function(cb) {
       return self.iotHubClient.receive(id, onMessageHandler, printError, { eventPosition: EventPosition.fromEnqueuedTime(Date.now()) });
     });
   }).catch(printError);
+
 }
 
 function IoTHubReaderClient(connectionString, consumerGroupName) {
