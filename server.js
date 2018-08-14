@@ -4,6 +4,7 @@ const WebSocket = require('ws');
 const moment = require('moment');
 const path = require('path');
 const iotHubClient = require('./IoThub/iot-hub.js');
+const config = require('./config');
 
 const app = express();
 
@@ -29,7 +30,7 @@ wss.broadcast = function broadcast(data) {
   });
 };
 
-var iotHubReader = new iotHubClient(process.env['Azure.IoT.IoTHub.ConnectionString'], process.env['Azure.IoT.IoTHub.ConsumerGroup']);
+var iotHubReader = new iotHubClient(config.ConnectionString, config.ConsumerGroup);
 iotHubReader.startReadMessage(function (obj, date) {
   try {
     console.log(date);

@@ -24,6 +24,7 @@ Go to [Azure Portal](https://portal.azure.com) and select your IoT hub. Click `E
 ## Deploy to Azure web application
 Go to [Azure Portal](https://portal.azure.com) to create your own Azure web app service. Then do the following setting:
 
+* Go to `Application settings`, add key/value pair `WEBSITE_NODE_DEFAULT_VERSION` and set it to `8.11.1`.
 * Go to `Application settings`, add key/value pairs `Azure.IoT.IoTHub.ConnectionString` and `Azure.IoT.IoTHub.ConsumerGroup` to `App settings` slot.
 * Go to `Deployment options`, set `Local git repository` to deploy your web app.
 * Go to `Deployment credentials`, set your deploy username and password.
