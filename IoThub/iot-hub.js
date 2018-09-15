@@ -3,7 +3,7 @@
  */
 'use strict';
 
-var { EventHubClient, EventPosition } = require('azure-event-hubs');
+var { EventHubClient, EventPosition } = require('@azure/event-hubs');
 
 // Close connection to IoT Hub.
 IoTHubReaderClient.prototype.stopReadMessage = function() {
