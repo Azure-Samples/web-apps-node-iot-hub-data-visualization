@@ -1,26 +1,27 @@
 const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
-const moment = require('moment');
 const path = require('path');
-const iotHubClient = require('./IoThub/iot-hub.js');
+const EventHubReader = require('./scripts/event-hub-reader.js');
 
+const iotHubConnectionString = process.env.IotHubConnectionString;
+const eventHubConsumerGroup = process.env.EventHubConsumerGroup;
+
+// Redirect requests to the public subdirectory to the root
 const app = express();
-
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(function (req, res/*, next*/) {
+app.use((req, res /* , next */) => {
   res.redirect('/');
 });
 
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-// Broadcast to all.
-wss.broadcast = function broadcast(data) {
-  wss.clients.forEach(function each(client) {
+wss.broadcast = (data) => {
+  wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
       try {
-        console.log('sending data ' + data);
+        console.log(`Broadcasting data ${data}`);
         client.send(data);
       } catch (e) {
         console.error(e);
@@ -29,39 +30,24 @@ wss.broadcast = function broadcast(data) {
   });
 };
 
-var iotHubReader = new iotHubClient(process.env['Azure.IoT.IoTHub.ConnectionString'], process.env['Azure.IoT.IoTHub.ConsumerGroup']);
-iotHubReader.startReadMessage(function (obj, date) {
-  try {
-    console.log(date);
-    date = date || Date.now()
-    wss.broadcast(JSON.stringify(Object.assign(obj, { time: moment.utc(date).format('YYYY:MM:DD[T]hh:mm:ss') })));
-  } catch (err) {
-    console.log(obj);
-    console.error(err);
-  }
+server.listen(process.env.PORT || '3000', () => {
+  console.log('Listening on %d.', server.address().port);
 });
 
-var port = normalizePort(process.env.PORT || '3000');
-server.listen(port, function listening() {
-  console.log('Listening on %d', server.address().port);
-});
+const eventHubReader = new EventHubReader(iotHubConnectionString, eventHubConsumerGroup);
 
-/**
- * Normalize a port into a number, string, or false.
- */
+(async () => {
+  await eventHubReader.startReadMessage((message, date, deviceId) => {
+    try {
+      const payload = {
+        IotData: message,
+        MessageDate: date || Date.now().toISOString(),
+        DeviceId: deviceId,
+      };
 
-function normalizePort(val) {
-  var port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
-  return false;
-}
+      wss.broadcast(JSON.stringify(payload));
+    } catch (err) {
+      console.error('Error broadcasting: [%s] from [%s].', err, message);
+    }
+  });
+})().catch();
