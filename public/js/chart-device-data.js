@@ -79,7 +79,7 @@ $(document).ready(() => {
   const chartOptions = {
     title: {
       display: true,
-      text: 'Temperature & Humidity Real-time Data',
+      text: 'Ambient Temperature & Humidity Real-time Data',
       fontSize: 36,
     },
     scales: {
@@ -137,7 +137,7 @@ $(document).ready(() => {
       console.log(messageData);
 
       // time and temperature are required
-      if (!messageData.MessageDate || !messageData.IotData.temperature) {
+      if (!messageData.MessageDate || !messageData.IotData.ambient.temperature) {
         return;
       }
 
@@ -145,11 +145,11 @@ $(document).ready(() => {
       const existingDeviceData = trackedDevices.findDevice(messageData.DeviceId);
 
       if (existingDeviceData) {
-        existingDeviceData.addData(messageData.MessageDate, messageData.IotData.temperature, messageData.IotData.humidity);
+        existingDeviceData.addData(messageData.MessageDate, messageData.IotData.ambient.temperature, messageData.IotData.ambient.humidity);
       } else {
         const newDeviceData = new DeviceData(messageData.DeviceId);
         trackedDevices.devices.push(newDeviceData);
-        newDeviceData.addData(messageData.MessageDate, messageData.IotData.temperature, messageData.IotData.humidity);
+        newDeviceData.addData(messageData.MessageDate, messageData.IotData.ambient.temperature, messageData.IotData.ambient.humidity);
 
         // add device to the UI list
         const node = document.createElement('option');
