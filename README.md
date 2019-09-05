@@ -172,7 +172,7 @@ In order to automate the steps to deploy to Azure, consider reading the followin
 - [WebApp](https://docs.microsoft.com/en-us/cli/azure/webapp?view=azure-cli-latest)
 
 ```az cli
-# Initialize these variables: $subscriptionId, $resourceGroupName, $location, $iotHubName, $consumerGroupName, $appServicePlanName, $webAppName, $iotHubConnectionString, $consumerGroupName
+# Initialize these variables: $subscriptionId, $resourceGroupName, $location, $iotHubName, $consumerGroupName, $deviceId, $appServicePlanName, $webAppName, $iotHubConnectionString
 
 # Login and set the specified subscription
 az login --subscription $subscriptionId
@@ -180,9 +180,12 @@ az login --subscription $subscriptionId
 # Create the resource group in the specified location
 az group create -n $resourceGroupName --location $location
 
-# Create an IoT Hub and configure a consumer group
+# Create an IoT Hub, create a consumer group, add a device, and get the device connection string
 az iot hub create -n $iotHubName -g $resourceGroupName --location $location --sku S1
 az iot hub consumer-group create -n $consumerGroupName --hub-name $iotHubName -g $resourceGroupName
+az iot hub show-connection-string -n $iotHubName -g $resourceGroupName
+az iot hub device-identity create -d $deviceId --hub-name $iotHubName -g $resourceGroupName
+az iot hub device-identity show-connection-string  -d $deviceId --hub-name $iotHubName -g $resourceGroupName
 
 # Create an app service plan and website, then configure website
 az appservice plan create -g $resourceGroupName -n $appServicePlanName --sku F1 --location $location

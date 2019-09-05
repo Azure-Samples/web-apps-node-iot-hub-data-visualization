@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 /* eslint-disable no-restricted-globals */
 /* eslint-disable no-undef */
 $(document).ready(() => {
@@ -137,7 +138,7 @@ $(document).ready(() => {
       console.log(messageData);
 
       // time and temperature are required
-      if (!messageData.MessageDate || !messageData.IotData.ambient.temperature) {
+      if (!messageData.MessageDate || !messageData.IotData.temperature) {
         return;
       }
 
@@ -145,11 +146,11 @@ $(document).ready(() => {
       const existingDeviceData = trackedDevices.findDevice(messageData.DeviceId);
 
       if (existingDeviceData) {
-        existingDeviceData.addData(messageData.MessageDate, messageData.IotData.ambient.temperature, messageData.IotData.ambient.humidity);
+        existingDeviceData.addData(messageData.MessageDate, messageData.IotData.temperature, messageData.IotData.humidity);
       } else {
         const newDeviceData = new DeviceData(messageData.DeviceId);
         trackedDevices.devices.push(newDeviceData);
-        newDeviceData.addData(messageData.MessageDate, messageData.IotData.ambient.temperature, messageData.IotData.ambient.humidity);
+        newDeviceData.addData(messageData.MessageDate, messageData.IotData.temperature, messageData.IotData.humidity);
 
         // add device to the UI list
         const node = document.createElement('option');
