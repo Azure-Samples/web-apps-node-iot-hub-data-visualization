@@ -45,6 +45,10 @@ $(document).ready(() => {
 
       return undefined;
     }
+
+    getDevicesCount() {
+      return this.devices.length;
+    }
   }
 
   const trackedDevices = new TrackedDevices();
@@ -78,11 +82,6 @@ $(document).ready(() => {
   };
 
   const chartOptions = {
-    title: {
-      display: true,
-      text: 'Ambient Temperature & Humidity Real-time Data',
-      fontSize: 36,
-    },
     scales: {
       yAxes: [{
         id: 'Temperature',
@@ -117,6 +116,8 @@ $(document).ready(() => {
 
   // Manage a list of devices in the UI, and update which device data the chart is showing
   // based on selection
+  let needsAutoSelect = true;
+  const deviceCount = document.getElementById('deviceCount');
   const listOfDevices = document.getElementById('listOfDevices');
   function OnSelectionChange() {
     const device = trackedDevices.findDevice(listOfDevices[listOfDevices.selectedIndex].text);
@@ -137,8 +138,8 @@ $(document).ready(() => {
       const messageData = JSON.parse(message.data);
       console.log(messageData);
 
-      // time and temperature are required
-      if (!messageData.MessageDate || !messageData.IotData.temperature) {
+      // time and either temperature or humidity are required
+      if (!messageData.MessageDate || (!messageData.IotData.temperature && !messageData.IotData.humidity)) {
         return;
       }
 
@@ -150,6 +151,8 @@ $(document).ready(() => {
       } else {
         const newDeviceData = new DeviceData(messageData.DeviceId);
         trackedDevices.devices.push(newDeviceData);
+        const numDevices = trackedDevices.getDevicesCount();
+        deviceCount.innerText = numDevices === 1 ? `${numDevices} device` : `${numDevices} devices`;
         newDeviceData.addData(messageData.MessageDate, messageData.IotData.temperature, messageData.IotData.humidity);
 
         // add device to the UI list
@@ -159,7 +162,8 @@ $(document).ready(() => {
         listOfDevices.appendChild(node);
 
         // if this is the first device being discovered, auto-select it
-        if (listOfDevices.selectedIndex === -1) {
+        if (needsAutoSelect) {
+          needsAutoSelect = false;
           listOfDevices.selectedIndex = 0;
           OnSelectionChange();
         }
