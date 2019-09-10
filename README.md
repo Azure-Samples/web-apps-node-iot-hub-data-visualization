@@ -15,18 +15,11 @@ This repo contains code for a web application, which can read temperature and hu
 
 ## Browser compatiblity
 
-| Browser | Least Version |
+| Browser | Verified version |
 | --- | --- |
-| IE | 10 |
-| Edge | 14 |
-| Firefox | 50 |
-| Chrome | 49 |
-| Safari | 10 |
-| Opera | 43 |
-| iOS Safari | 9.3 |
-| Opera Mini | ALL |
-| Android Browser | 4.3 |
-| Chrome for Android | 56 |
+| Edge | 44 |
+| Chrome | 76 |
+| Firefox | 69 |
 
 This tutorial shows how to set up a nodejs website to visualize device data streaming to an [Azure IoT Hub](https://azure.microsoft.com/en-us/services/iot-hub) using the [event hub SDK](https://www.npmjs.com/package/@azure/event-hubs). In this tutorial, you learn how to:
 
@@ -79,7 +72,7 @@ Public/index.html handles the UI layout for the web page, and references the nec
 1. To pass parameters to the website, you may use environment variables or parameters.
     - Open a command prompt or PowerShell terminal and set the environment variables **IotHubConnectionString** and **EventHubConsumerGroup**.
 
-        > Syntax for Windows command prompt is `set key=value`, PowerShell is `$env:key="value"`, and Linux shell is `key=value`.
+        > Syntax for Windows command prompt is `set key=value`, PowerShell is `$env:key="value"`, and Linux shell is `export key="value"`.
 
     - Or, if you are debugging with [VS Code](https://code.visualstudio.com/docs/nodejs/nodejs-debugging), you can edit the launch.json file and add these values in the env property.
 

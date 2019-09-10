@@ -10,19 +10,20 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/chart-device-data.js" type="text/javascript" charset="utf-8"></script>
     <link href="css/style.css" rel="stylesheet" />
-    
+
     <title>Temperature &amp; Humidity Real-time Data</title>
 </head>
 
 <body>
-    <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-content: stretch;">
-        <div  style="align-self: center; flex: 2 2 200px;">
-            <h4>Select a device:</h4>
-            <select id="listOfDevices" size=10 style="width: 180px;"></select>
-        </div>
-        <div style="align-self: top; flex: 8 8 800px; min-height: 500px;">
-            <canvas id="iotChart" width="400" height="150"></canvas>
-        </div>
+    <h1 class="flexHeader">
+        <span>
+            <span id="deviceCount">0 devices</span>
+            <select id="listOfDevices" class="select_box"></select>
+        </span>
+        <span>Temperature & Humidity Real-time Data</span>
+    </h1>
+    <div>
+        <canvas id="iotChart"></canvas>
     </div>
 </body>
 
