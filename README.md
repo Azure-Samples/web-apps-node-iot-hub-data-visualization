@@ -168,7 +168,8 @@ In order to automate the steps to deploy to Azure, consider reading the followin
 # Initialize these variables: $subscriptionId, $resourceGroupName, $location, $iotHubName, $consumerGroupName, $deviceId, $appServicePlanName, $webAppName, $iotHubConnectionString
 
 # Login and set the specified subscription
-az login --subscription $subscriptionId
+az login
+az account set -s $subscriptionId
 
 # Create the resource group in the specified location
 az group create -n $resourceGroupName --location $location
