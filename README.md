@@ -7,7 +7,7 @@ products:
 - azure-iot-hub
 name: IoTHub data visualization in web application
 urlFragment: web-app-visualization
-description: "This repo contains code for a web application, which can read temperature and humidity data from IoT Hub and show the real-time data on a web page".
+description: "This repo contains code for a web application, which can read temperature and humidity data from IoT Hub and show the real-time data on a web page."
 ---
 
 # web-apps-node-iot-hub-data-visualization
