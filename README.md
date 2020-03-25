@@ -22,7 +22,7 @@ This repo contains code for a web application, which can read temperature and hu
 | Chrome | 76 |
 | Firefox | 69 |
 
-This tutorial shows how to set up a nodejs website to visualize device data streaming to an [Azure IoT Hub](https://azure.microsoft.com/en-us/services/iot-hub) using the [event hub SDK](https://www.npmjs.com/package/@azure/event-hubs). In this tutorial, you learn how to:
+This tutorial, also published [here](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-live-data-visualization-in-web-apps), shows how to set up a nodejs website to visualize device data streaming to an [Azure IoT Hub](https://azure.microsoft.com/en-us/services/iot-hub) using the [event hub SDK](https://www.npmjs.com/package/@azure/event-hubs). In this tutorial, you learn how to:
 
 - Create an Azure IoT Hub
 - Configure your IoT hub with a device, a consumer group, and use that information for connecting a device and a service application
@@ -80,7 +80,7 @@ Public/index.html handles the UI layout for the web page, and references the nec
         ```json
         "env": {
             "NODE_ENV": "local",
-            "IotHubConnectionString": "<your iot hub connection string>",
+            "IotHubConnectionString": "<your IoT hub's connection string>",
             "EventHubConsumerGroup": "<your consumer group name>"
         }
         ```
@@ -88,7 +88,7 @@ Public/index.html handles the UI layout for the web page, and references the nec
 1. In the same directory as package.json, run `npm install` to download and install referenced packages.
 
 1. Run the website one of the following ways:
-    - From the command-line use `npm start`
+    - From the command-line (with environment variables set), use `npm start`
     - In VS Code, press F5 to start debugging
 
 1. Watch for console output from the website.
@@ -178,7 +178,9 @@ az group create -n $resourceGroupName --location $location
 # Create an IoT Hub, create a consumer group, add a device, and get the device connection string
 az iot hub create -n $iotHubName -g $resourceGroupName --location $location --sku S1
 az iot hub consumer-group create -n $consumerGroupName --hub-name $iotHubName -g $resourceGroupName
+
 az iot hub show-connection-string -n $iotHubName -g $resourceGroupName
+
 az iot hub device-identity create -d $deviceId --hub-name $iotHubName -g $resourceGroupName
 az iot hub device-identity show-connection-string  -d $deviceId --hub-name $iotHubName -g $resourceGroupName
 
