@@ -80,12 +80,17 @@ async function convertIotHubToEventHubsConnectionString(connectionString) {
             const error = context.receiver && context.receiver.error;
             if (isAmqpError(error) && error.condition === "amqp:link:redirect") {
                 const hostname = error.info && error.info.hostname;
+                const parsedAddress = error.info.address.match(/5671\/(.*)\/\$management/i);
+
                 if (!hostname) {
                     reject(error);
+                } else if (parsedAddress == undefined || (parsedAddress && parsedAddress[1] == undefined)) {
+                    const msg = `Cannot parse the EventHub name from the given address: ${error.info.address} in the error: ` +
+                        `${error.stack}\n${JSON.stringify(error.info)}.\nThe parsed result is: ${JSON.stringify(parsedAddress)}.`;
+                    reject(Error(msg));
                 } else {
-                resolve(
-                    `Endpoint=sb://${hostname}/;EntityPath=${iotHubName};SharedAccessKeyName=${SharedAccessKeyName};SharedAccessKey=${SharedAccessKey}`
-                );
+                    const entityPath = parsedAddress[1];
+                    resolve(`Endpoint=sb://${hostname}/;EntityPath=${entityPath};SharedAccessKeyName=${SharedAccessKeyName};SharedAccessKey=${SharedAccessKey}`);
                 }
             } else {
                 reject(error);
