@@ -91,6 +91,11 @@ $(document).ready(() => {
           display: true,
         },
         position: 'left',
+        ticks: {
+          suggestedMin: 0,
+          suggestedMax: 100,
+          beginAtZero: true
+        }
       },
       {
         id: 'Humidity',
@@ -100,6 +105,11 @@ $(document).ready(() => {
           display: true,
         },
         position: 'right',
+        ticks: {
+          suggestedMin: 0,
+          suggestedMax: 100,
+          beginAtZero: true
+        }
       }]
     }
   };
